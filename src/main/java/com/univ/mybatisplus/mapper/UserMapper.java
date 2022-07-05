@@ -1,5 +1,8 @@
 package com.univ.mybatisplus.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.univ.mybatisplus.entity.User;
 
@@ -13,5 +16,23 @@ import com.univ.mybatisplus.entity.User;
  *
  */
 public interface UserMapper extends BaseMapper<User> {
+
+    /**
+     * mybatis-plus中也可以有对应的xml文件。
+     * 准确讲，mapper使用对应的xml文件是mybatis的功能，而mybatis-plus是基于mybatis的，自然支持这种方式。
+     *
+     * @param id
+     * @return
+     */
+    User getByIdXml(@Param("id") Long id);
+
+    /**
+     * 直接使用注解形式
+     *
+     * @param id
+     * @return
+     */
+    @Select("select * from user where id = #{id}")
+    User getByIdAnnotation(@Param("id") Long id);
 
 }

@@ -9,3 +9,5 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 配置mapper xml的扫描路径
+  mapper-locations: classpath:mapper/*.xml

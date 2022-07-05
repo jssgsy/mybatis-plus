@@ -58,6 +58,19 @@ class MybatisPlusApplicationTests {
         System.out.println(result);
     }
 
+    // 使用xml中的sql语句
+    @Test
+    public void testMapperSelectXml() {
+        User user = userMapper.getByIdXml(2L);
+        System.out.println(user);
+    }
+
+    @Test
+    public void testMapperSelectAnnotation() {
+        User user = userMapper.getByIdAnnotation(2L);
+        System.out.println(user);
+    }
+
     /**
      * 使用mybatis-plus中的IService会有一些限制(主要是java只允许单继承)，实际中一般不要使用
      */
