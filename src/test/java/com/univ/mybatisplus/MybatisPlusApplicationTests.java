@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.univ.mybatisplus.entity.User;
 import com.univ.mybatisplus.mapper.UserMapper;
+import com.univ.mybatisplus.service.UserService;
 
 @SpringBootTest
 class MybatisPlusApplicationTests {
@@ -17,8 +18,11 @@ class MybatisPlusApplicationTests {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserService userService;
+
     @Test
-    public void testSelect() {
+    public void testMapperSelect() {
         System.out.println(("----- selectAll method test ------"));
         List<User> userList = userMapper.selectList(null);
         Assert.assertEquals(5, userList.size());
@@ -26,7 +30,7 @@ class MybatisPlusApplicationTests {
     }
 
     @Test
-    public void testInsert() {
+    public void testMapperInsert() {
         User user = new User();
         user.setAge(30);
         user.setEmail("my email");
@@ -37,7 +41,7 @@ class MybatisPlusApplicationTests {
     }
 
     @Test
-    public void testUpdate() {
+    public void testMapperUpdate() {
         User user = new User();
         user.setName("new unicom");
 
@@ -49,13 +53,23 @@ class MybatisPlusApplicationTests {
     }
 
     @Test
-    public void testDelete() {
+    public void testMapperDelete() {
         int result = userMapper.delete(new QueryWrapper<User>().eq("id", 1));
         System.out.println(result);
     }
 
+    /**
+     * 使用mybatis-plus中的IService会有一些限制(主要是java只允许单继承)，实际中一般不要使用
+     */
     @Test
-    void contextLoads() {
+    public void testServiceSave() {
+        User user = new User();
+        user.setAge(40);
+        user.setEmail("email40");
+        user.setId(40L);
+        user.setName("unicom40");
+        boolean result = userService.save(user);
+        System.out.println(result);
     }
 
 }
