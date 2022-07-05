@@ -4,3 +4,8 @@ spring:
     url: jdbc:mysql://localhost:3306/mybatis?useAffectedRows=true
     username: test
     password: 123
+
+# 控制台打印出sql语句，开发时可用
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
