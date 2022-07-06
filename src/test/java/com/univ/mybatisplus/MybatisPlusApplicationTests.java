@@ -2,12 +2,15 @@ package com.univ.mybatisplus;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.univ.mybatisplus.entity.User;
 import com.univ.mybatisplus.mapper.UserMapper;
 import com.univ.mybatisplus.service.UserService;
@@ -23,9 +26,27 @@ class MybatisPlusApplicationTests {
 
     @Test
     public void testMapperSelect() {
-        System.out.println(("----- selectAll method test ------"));
         List<User> userList = userMapper.selectList(null);
-        Assert.assertEquals(5, userList.size());
+        userList.forEach(System.out::println);
+    }
+
+    /**
+     * 分页查询
+     *
+     * 注：mybatis-plus的分页是通过插件形式完成的，因此需要在项目中配置分页插件。参见{@link com.baomidou.mybatisplus.core.MybatisConfiguration}
+     *
+     * @see <a href='https://baomidou.com/pages/2976a3/#spring'>mybatis-plus插件官网说明</a>
+     */
+    @Test
+    public void testMapperSelectWithPage() {
+        // mybatis-plus没有提供page的工具类，可以自己封装一个
+        IPage<User> page = new Page<>();
+        page.setCurrent(2);
+        page.setSize(2);
+
+        IPage<User> userIPage = userMapper.selectPage(page, null);
+        // 数据也保存在IPage中
+        List<User> userList = userIPage.getRecords();
         userList.forEach(System.out::println);
     }
 
@@ -47,8 +68,26 @@ class MybatisPlusApplicationTests {
 
         // 参数一：要被设置的值，参数二：where条件
         // 这里注意下为何eq返回的仍然是一个QueryWrapper
+        // 另一种用法：使用Wrappers工具类
+        // QueryWrapper<User> queryWrapper = Wrappers.<User>query();
         QueryWrapper<User> wrapper = new QueryWrapper<User>().eq("age", 30);
         int result = userMapper.update(user, wrapper);
+        System.out.println(result);
+    }
+
+    /**
+     * 效果与{@link #testMapperUpdate()}等价，用来演示lambda的用法
+     *
+     * 使用lambda的好处：不需要硬编码字段
+     *
+     */
+    @Test
+    public void testMapperUpdateUseLambda() {
+        User user = new User();
+        user.setName("new unicom v2");
+
+        LambdaQueryWrapper<User> lambdaQueryWrapper = Wrappers.<User>lambdaQuery().eq(User::getAge, 30);
+        int result = userMapper.update(user, lambdaQueryWrapper);
         System.out.println(result);
     }
 
