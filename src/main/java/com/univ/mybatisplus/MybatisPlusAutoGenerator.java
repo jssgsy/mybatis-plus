@@ -1,8 +1,9 @@
 package com.univ.mybatisplus;
 
-import org.junit.Test;
+import java.util.Collections;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 
 /**
@@ -17,12 +18,13 @@ import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
  */
 public class MybatisPlusAutoGenerator {
 
-    String url = "jdbc:postgresql://127.0.0.1:5432/univ";
-    String username = "test";
-    String password = "1234";
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/mybatis?useAffectedRows=true";
+        String username = "test";
+        String password = "123";
 
-    @Test
-    public void test() {
+        // 工程目录
+        String projectPath = System.getProperty("user.dir");
         FastAutoGenerator.create(url, username, password)
                 // 1. globalConfig
                 .globalConfig(builder -> {
@@ -31,17 +33,21 @@ public class MybatisPlusAutoGenerator {
                             .enableSwagger() // 开启 swagger 模式
                             .fileOverride() // 覆盖已生成文件
                             // 指定输出目录, 即要生成的各种文件放到哪个『目录』下，一般填写至src/main/java工程全路径
-                            .outputDir("/Users/univ/gitRepos/mybatis-plus/src/main/java");
+                            .outputDir(projectPath + "/src/main/java");
                 })
                 // 2. packageConfig
                 .packageConfig(builder -> {
                     // 重要：parent + module 是包的全路径名，(parent一定要填，因为有默认值com.baomidou)
                     // 毕竟，这里就是包配置(packageConfig)
-                    builder.parent("com.univ.mybatisplus"); // 要生成的各种文件放到哪个『包』下
-                    // .moduleName("moudule") // 要生成的各种文件放到哪个『包』下
-                    // .entity("") // 即生成的entity文件放在哪个包下，默认就是entity
-                    // .service("") // 即生成的service文件放在哪个包下，默认就是service，其它的还有controller等，查看源码
-                    // .pathInfo(pathInfo); // 设置各种文件的组件，注，pathInfo不受上述的parent作用，即parent的上级是outputDir
+                    builder.parent("com.univ.mybatisplus") // 要生成的各种文件放到哪个『包』下
+                            // .moduleName("moudule") // 要生成的各种文件放到哪个『包』下
+                            // .entity("") // 即生成的entity文件放在哪个包下，默认就是entity
+                            .service("") // 即生成的service文件放在哪个包下，默认就是service，其它的还有controller等，查看源码。
+
+                            // 设置各种文件的组件，注，pathInfo不受上述的parent作用，即parent的上级是outputDir(在非全路径情况下？)
+                            // xml资源文件还是放到resources目录下，而不是和java文件混在一起
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, projectPath + "/src/main/resources/mapper"));
+
                 })
                 // 3. strategyConfig
                 .strategyConfig(builder -> {
