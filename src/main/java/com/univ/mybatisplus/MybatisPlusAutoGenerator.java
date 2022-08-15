@@ -54,7 +54,7 @@ public class MybatisPlusAutoGenerator {
                     // 设置需要生成的表名，不填会为库中所有表生成相应的代码
                     // 注：是可变长类型，可填多个表名
                     builder.addInclude("my_table_name", "");
-                    // .addTablePrefix("t_", "c_"); // 设置过滤表前缀,如表为t_xxx，则此时生成的实例类为Xxx，而还是TXxx
+                    // .addTablePrefix("t_", "c_"); // 设置过滤表前缀,如表为t_xxx，则此时生成的实例类为Xxx，而不是TXxx
                     // 默认生成的service接口前会加I，这样设置就不会加了，即可以在这里自定义生成的service、entity、mapper的类名
                     // .serviceBuilder().formatServiceFileName("%sService");
                     // builder.entityBuilder().enableLombok().formatFileName("Xxx%s");
