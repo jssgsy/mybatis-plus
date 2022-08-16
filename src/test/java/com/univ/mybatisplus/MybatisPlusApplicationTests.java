@@ -2,6 +2,8 @@ package com.univ.mybatisplus;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,10 +20,10 @@ import com.univ.mybatisplus.service.UserService;
 @SpringBootTest
 class MybatisPlusApplicationTests {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     @Test
@@ -122,6 +124,41 @@ class MybatisPlusApplicationTests {
         user.setName("unicom40");
         boolean result = userService.save(user);
         System.out.println(result);
+    }
+
+    /**
+     * 同时使用and与or，看注释
+     */
+    @Test
+    public void combineAndOr() {
+        LambdaQueryWrapper<User> query = Wrappers.lambdaQuery(User.class);
+        // query的默认连接符是and
+        // 1. 单纯的and：name = 'xxx' and age = 20 and email = 'yyy'
+        query.eq(User::getName, "xxx").eq(User::getAge, 20).eq(User::getEmail, "yyy");
+
+        // 2. 单纯的or：name = 'xxx' or age = 20 or email = 'yyy'
+        query.eq(User::getName, "xxx")
+                .or()
+                .eq(User::getAge, 20)
+                .or()   // 不能少，每一个or()就是在sql后加一个or连接
+                .eq(User::getEmail, "yyy");
+
+        // 3. and与or混用：错误的写法，
+        // 此时等价于：name = 'xxx' and age = 20 or email = 'yyy' and stuId = 1
+        // 注意，此时并没有加任何括号
+        query.eq(User::getName, "xxx").eq(User::getAge, 20).
+                or()
+                .eq(User::getEmail, "yyy").eq(User::getStuId, 1);
+
+        // 4. and与or混用：正确的写法，需要加括号时将整个条件语句放到重载的or或and方法中!
+        // 4.1 a = x1 and (b = x2 or c = x3)
+        query.eq(User::getName, "xxx").or(t -> t.eq(User::getEmail, "yyy").eq(User::getStuId, 1));
+
+        // 4.2 (a = x1 and b = x2) or c = x3
+        query.and(t -> t.eq(User::getName, "xxx").eq(User::getEmail, "yyy"))
+                .or()
+                .eq(User::getEmail, "yyy");
+        // userMapper.selectList(query);
     }
 
 }
