@@ -161,4 +161,17 @@ class MybatisPlusApplicationTests {
         // userMapper.selectList(query);
     }
 
+    /**
+     * 只取部分字段：放在QueryWrapper中
+     * 不论是LambdaQueryWrapper还是QueryWrapper都有几个重载的select方法，可用来只获取部分字段
+     */
+    @Test
+    public void partColumn() {
+        LambdaQueryWrapper<User> query = Wrappers.lambdaQuery(User.class);
+        // 是可变参数
+        query.select(User::getEmail, User::getAge);
+        List<User> users = userMapper.selectList(query);// SELECT email,age FROM user
+        System.out.println(users);
+    }
+
 }
