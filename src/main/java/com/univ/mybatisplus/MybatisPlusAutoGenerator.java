@@ -41,7 +41,7 @@ public class MybatisPlusAutoGenerator {
                     // 毕竟，这里就是包配置(packageConfig)
                     builder.parent("com.univ.mybatisplus") // 要生成的各种文件放到哪个『包』下
                             // .moduleName("moudule") // 要生成的各种文件放到哪个『包』下
-                            // .entity("") // 即生成的entity文件放在哪个包下，默认就是entity
+                            // .entity("") // 即生成的entity文件放在哪个包下，默认就是entity,如entity.xxx，注意是包名
                             .service("") // 即生成的service文件放在哪个包下，默认就是service，其它的还有controller等，查看源码。
 
                             // 设置各种文件的组件，注，pathInfo不受上述的parent作用，即parent的上级是outputDir(在非全路径情况下？)
