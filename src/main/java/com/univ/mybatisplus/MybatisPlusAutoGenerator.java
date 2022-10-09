@@ -1,10 +1,10 @@
 package com.univ.mybatisplus;
 
-import java.util.Collections;
-
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
+import java.util.Collections;
 
 /**
  * MybatisPlus代码自动生成
@@ -18,13 +18,15 @@ import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
  */
 public class MybatisPlusAutoGenerator {
 
+    static String url = "jdbc:mysql://localhost:3306/mybatis?useAffectedRows=true";
+    static String username = "test";
+    static String password = "123";
     public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:3306/mybatis?useAffectedRows=true";
-        String username = "test";
-        String password = "123";
+
 
         // 工程目录
         String projectPath = System.getProperty("user.dir");
+        // 注：这里还有一个重载的方法，入参为DataSourceConfig.Builder，这里能设置的参数更多，如schema，这在诸如金仓等数据库中表名前需要加public schema非常有用
         FastAutoGenerator.create(url, username, password)
                 // 1. globalConfig
                 .globalConfig(builder -> {
@@ -70,6 +72,31 @@ public class MybatisPlusAutoGenerator {
                 .templateConfig(builder -> builder.controller(""))
                 .templateConfig(builder -> builder.service(""))
                 .templateConfig(builder -> builder.serviceImpl(""))
+                .execute();
+    }
+
+    /**
+     * 演示表名前需要加schema时的生成代码，以金仓数据库为例
+     */
+    private void schemaSample() {
+
+        // 不再直接以url, username, password为入参，而是DataSourceConfig.Builder
+        FastAutoGenerator.create(new DataSourceConfig.Builder(url, username, password)
+                // 这句是重点
+                .schema("public"))
+                .globalConfig(builder -> {
+                    // 参考main方法
+                })
+                .packageConfig(builder -> {
+                    // 参考main方法
+                })
+                .strategyConfig(builder -> {
+                    // 注：这里就不要写成public.demo了，上面已经设置了schema为public
+                    builder.addInclude("demo");// 设置需要生成的表名
+                    // 参考main方法
+                })
+                //
+                .templateEngine(new VelocityTemplateEngine())
                 .execute();
     }
 
