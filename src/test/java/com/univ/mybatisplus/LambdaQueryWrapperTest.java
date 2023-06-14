@@ -1,6 +1,7 @@
 package com.univ.mybatisplus;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.univ.mybatisplus.entity.User;
 import com.univ.mybatisplus.mapper.UserMapper;
@@ -37,6 +38,7 @@ public class LambdaQueryWrapperTest {
 		// query的默认连接符是and
 		// 1. 单纯的and：name = 'xxx' and age = 20 and email = 'yyy'
 		query.eq(User::getName, "xxx").eq(User::getAge, 20).eq(User::getEmail, "yyy");
+//		userMapper.selectList(query);
 
 		// 2. 单纯的or：name = 'xxx' or age = 20 or email = 'yyy'
 		query.eq(User::getName, "xxx")
@@ -44,13 +46,15 @@ public class LambdaQueryWrapperTest {
 				.eq(User::getAge, 20)
 				.or()   // 不能少，每一个or()就是在sql后加一个or连接
 				.eq(User::getEmail, "yyy");
+//		userMapper.selectList(query);
 
 		// 3. and与or混用：错误的写法，
 		// 此时等价于：name = 'xxx' and age = 20 or email = 'yyy' and stuId = 1
 		// 注意，此时并没有加任何括号
 		query.eq(User::getName, "xxx").eq(User::getAge, 20).
-				or()
-				.eq(User::getEmail, "yyy").eq(User::getStuId, 1);
+			or()
+			.eq(User::getEmail, "yyy").eq(User::getStuId, 1);
+//		userMapper.selectList(query);
 
 		// 4. and与or混用：正确的写法，需要加括号时将整个条件语句放到重载的or或and方法中!
 		// 4.1 a = x1 or (b = x2 and c = x3)
@@ -58,8 +62,8 @@ public class LambdaQueryWrapperTest {
 
 		// 4.2 (a = x1 and b = x2) or c = x3
 		query.and(t -> t.eq(User::getName, "xxx").eq(User::getEmail, "yyy"))
-				.or()
-				.eq(User::getEmail, "yyy");
+			.or()
+			.eq(User::getEmail, "yyy");
 		// userMapper.selectList(query);
 	}
 
@@ -96,5 +100,16 @@ public class LambdaQueryWrapperTest {
 		wrapper.orderByDesc(User::getAge);
 		List<User> users = userMapper.selectList(wrapper);
 		System.out.println(users);
+	}
+
+	/**
+	 * LambdaQueryWrapper本身不支持distinct查询
+	 *
+	 * 但可由QueryWrapper使用distinct语句后转成LambdaQueryWrapper
+	 */
+	@Test
+	public void distinct() {
+		LambdaQueryWrapper<User> lambda = new QueryWrapper<User>().select("distinct age").lambda();
+		userMapper.selectCount(lambda);
 	}
 }
