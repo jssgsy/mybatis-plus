@@ -63,6 +63,10 @@ public class MybatisPlusAutoGenerator {
                     // builder.serviceBuilder().formatServiceFileName("Xxx%sService");
                     // builder.serviceBuilder().formatServiceFileName("Xxx%sService").formatServiceImplFileName("Xxx%sServiceImpl");
                     // builder.mapperBuilder().formatMapperFileName("Xxx%sMapper").formatXmlFileName("Xxx%s");
+
+                    // 此时会在对应属性上生成@TableLogic注解
+                    builder.entityBuilder().logicDeletePropertyName("age");
+//                    builder.entityBuilder().logicDeleteColumnName("age");
                 })
                 // 4. templateEngine
                 // 使用Velocity引擎模板，默认的是Velocity引擎模板、不同的引擎要引入不同的包
