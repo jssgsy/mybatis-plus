@@ -64,8 +64,8 @@ public class MybatisPlusAutoGenerator {
                     // builder.serviceBuilder().formatServiceFileName("Xxx%sService").formatServiceImplFileName("Xxx%sServiceImpl");
                     // builder.mapperBuilder().formatMapperFileName("Xxx%sMapper").formatXmlFileName("Xxx%s");
 
-                    // 此时会在对应属性上生成@TableLogic注解
-                    builder.entityBuilder().logicDeletePropertyName("age");
+                    // 此时会在对应属性上生成@TableLogic注解,经验证，如下任一设置均可
+//                    builder.entityBuilder().logicDeletePropertyName("age");
 //                    builder.entityBuilder().logicDeleteColumnName("age");
                 })
                 // 4. templateEngine
