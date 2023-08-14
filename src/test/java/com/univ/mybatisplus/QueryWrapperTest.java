@@ -1,5 +1,6 @@
 package com.univ.mybatisplus;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.univ.mybatisplus.entity.User;
@@ -31,12 +32,17 @@ public class QueryWrapperTest {
 		QueryWrapper<User> query = Wrappers.query();
 		query.select("age, count(*) as cnt");
 		query.groupBy("age");
+
+		// 此时可转成lambda query继续添加条件
+		LambdaQueryWrapper<User> lambda = query.lambda();
+		lambda.ge(User::getAge, 10);
+		lambda.last("limit 1, 10");
 		// selectList形式
-		List<User> users = userMapper.selectList(query);
+		List<User> users = userMapper.selectList(lambda);
 		System.out.println(users);
 
 		// selectMaps形式
-		List<Map<String, Object>> cntMap = userMapper.selectMaps(query);
+		List<Map<String, Object>> cntMap = userMapper.selectMaps(lambda);
 		System.out.println(cntMap);
 	}
 }
