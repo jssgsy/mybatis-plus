@@ -58,10 +58,15 @@ public class LambdaQueryWrapperTest {
 
 		// 4. and与or混用：正确的写法，需要加括号时将整个条件语句放到重载的or或and方法中!
 		// 4.1 a = x1 or (b = x2 and c = x3)
-		query.eq(User::getName, "xxx").or(t -> t.eq(User::getEmail, "yyy").eq(User::getStuId, 1));
+		query.eq(User::getName, "xxx").
+				or(
+						t -> t.eq(User::getEmail, "yyy").eq(User::getStuId, 1)
+				);
 
 		// 4.2 (a = x1 and b = x2) or c = x3
-		query.and(t -> t.eq(User::getName, "xxx").eq(User::getEmail, "yyy"))
+		query.and(
+				t -> t.eq(User::getName, "xxx").eq(User::getEmail, "yyy")
+				)
 			.or()
 			.eq(User::getEmail, "yyy");
 		// userMapper.selectList(query);
