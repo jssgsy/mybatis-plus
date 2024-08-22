@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.univ.mybatisplus.entity.User;
 import com.univ.mybatisplus.mapper.UserMapper;
+
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Test;
@@ -116,5 +118,15 @@ public class LambdaQueryWrapperTest {
 	public void distinct() {
 		LambdaQueryWrapper<User> lambda = new QueryWrapper<User>().select("distinct age").lambda();
 		userMapper.selectCount(lambda);
+	}
+
+	@Test
+	public void groupBy() {
+		LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery(User.class);
+		queryWrapper.select(Arrays.asList(User::getAge, User::getName));
+		queryWrapper.ge(User::getAge, 1);
+		queryWrapper.groupBy(Arrays.asList(User::getAge, User::getName));
+		List<User> users1 = userMapper.selectList(queryWrapper);
+		System.out.println(users1);
 	}
 }

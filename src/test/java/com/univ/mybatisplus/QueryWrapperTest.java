@@ -65,7 +65,7 @@ public class QueryWrapperTest {
 
 	/**
 	 * group by语句
-	 * 只能用在QueryWrapper中；
+	 * 复杂group by语句只能用在QueryWrapper，简单group by可用在LambdaQueryWrapper
 	 */
 	@Test
 	public void groupBy() {
