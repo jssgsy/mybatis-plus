@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mybatis?useAffectedRows=true
+    url: jdbc:mysql://localhost:3316/mybatis?useAffectedRows=true
     username: root
-    password: /*1Univ2mysql*/
+    password: root
 
 # 控制台打印出sql语句，开发时可用
 mybatis-plus:
